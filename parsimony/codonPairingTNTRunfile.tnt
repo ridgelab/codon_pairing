@@ -1,0 +1,3 @@
+mxram 40000
+
+proc mammals_table.txt;log mammalsAnalysis; hold 100;  mult= replic 50; bbreak=tbr; nelsen *;taxname= ; export - mammals_tree.nex ;

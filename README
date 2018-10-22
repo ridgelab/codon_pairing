@@ -1,0 +1,99 @@
+##########################
+
+Pipeline 
+By: Justin Miller and Lauren McKinnon
+Email: jmiller@byu.edu
+
+##########################
+
+Purpose: Recover a Phylogeny with Codon Pairing and Compare it to The Open Tree of Life.
+The pipeline for both the alignment-free and parsimony-based approaches are listed.
+
+##########################
+Alignment-free
+##########################
+
+REQUIREMENTS:
+
+See requirements in README (in 'alignment_free' directory) and README_getOTLtree (in 'other_scripts' directory)
+
+##########################
+
+Step 1:
+Move all coding sequences (CDS) in FASTA format into a directory, one for each species. 
+Each fasta file should be in the format {species_name}{.gz}, with the .gz being used if the file is gzipped.
+An example of a directory with correctly formatted CDS files is in the test/mammals/ directory.
+
+Step 2:
+Create a Distance Matrix using pairing_distance.py (in 'alignment_free' directory)
+Examples of possible ways to do this are in the README (in 'alignment_free' directory). 
+The recommended method is:
+python alignment_free/pairing_distance.py -id testFiles/mammals/ -o output
+
+Step 3:
+Recover a phylogeny using the distance matrix.
+We provide a script to recover a phylogeny using BioPython, makeNewick.py.
+python other_scripts/makeNewick.py -i output -o output.nwk
+
+Step 4:
+Infer the phylogeny of these species from the Open Tree of Life.
+See README_getOTLtree (in 'other_scripts') for more information.
+The recommended method is:
+python other_scripts/getOTLtree.py -i output.nwk  -o OTL.nwk -e
+
+Step 5:
+Compare the recovered phylogeny using cam.py with the Open Tree of Life.
+This optional step requires the ETE toolkit (http://etetoolkit.org/download/)
+The command we use to compare the trees is:
+ete3 compare -t output.nwk -r OTL.nwk --unrooted
+The columns with -br+ show the percent similarity between the recovered phylogeny
+and the Open Tree of Life.
+
+
+##########################
+Parsimony
+##########################
+
+REQUIREMENTS:
+
+See requirements in README_parsimony_pairing (in 'parsimony' directory) and README_getOTLtree (in 'other_scripts' directory)
+
+##########################
+Step 1:
+Move all coding sequences (CDS) in FASTA format into a directory, one for each species. 
+Each fasta file should be in the format {species_name}{.gz}, with the .gz being used if the file is gzipped.
+An example of a directory with correctly formatted CDS files is in the test/mammals/ directory.
+
+Step 2:
+Create a character matrix of parsimony informative codons pairs using parsimony_pairing.py in 'parsimony' directory).
+Examples of possible ways to do this are in the README_parsimony_pairing file (in 'parsimony' directory).
+The recommended method is:
+python parsimony/parsimony_pairing -id testFiles/mammals/ -o mammals_matrix.txt -oc mammals_characters.txt
+
+Step 3:
+Recover a phylogeny using the character matrix created in Step 2.
+We provide a Tree Analysis Using New Technology (TNT) script to do this, codonPairingTNTRunfile.tnt (in 'parsimony' directory).
+This step requires TNT (http://www.zmuc.dk/public/phylogeny/tnt/)
+The TNT command we use to run the TNT script is:
+./tnt proc codonPairingTNTRunfile.tnt ;
+
+Step 4:
+Infer the phylogeny of these species from the Open Tree of Life.
+See README_getOTLtree (in 'other_scripts') for more information.
+The recommended method is:
+python other_scripts/getOTLtree.py -i output.nwk  -o OTL.nwk -e
+
+Step 5:
+Compare the recovered phylogeny using cam.py with the Open Tree of Life.
+This optional step requires the ETE toolkit (http://etetoolkit.org/download/)
+The command we use to compare the trees is:
+ete3 compare -t output.nwk -r OTL.nwk --unrooted
+The columns with -br+ show the percent similarity between the recovered phylogeny
+and the Open Tree of Life. For clades that recovered multiple maximum parsimony trees, we find the mean 
+comparison of all the trees. Further instructions can be found in 'parsimony/comparisons' directory.
+
+##########################
+
+
+Thank you, and happy researching!!
+

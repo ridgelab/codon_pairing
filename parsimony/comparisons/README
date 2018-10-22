@@ -1,0 +1,51 @@
+############################
+
+Compare TNT Phylogenetic Trees to Reference Trees
+Compiled by: Lauren McKinnon
+Email: laurenmckinnon77@gmail.com
+
+############################
+
+Purpose: Compare phylogenetic trees to reference trees using the ete compare module. Calculate the mean
+	branch percent identity of all identical phylogenetic trees.
+
+############################
+
+Requirements:
+
+The ete compare module is required. (http://etetoolkit.org/documentation/ete-compare/)
+
+###########################
+
+Usage:
+
+Files in this comparisons directory contain programs to quickly compare TNT files of many maximum parsimony
+	trees with a reference tree. It outputs a file of the ete comparisons for each input tree as well as the
+	average branch percent identity. 
+
+To perform the comparison, the findMeanComparison.sh script should be run with three additional parameters:
+	the TNT file of phylogenetic trees, a path to the output file that will be created, and the path to
+	the reference tree to be used for the comparisons.
+
+Example usage:
+./findMeanTreeComparison.sh /testFiles/plant_trees plant_comparisons /testFiles/plant_ref.nwk
+
+Running the above command will produce an output file called plant_comparisons containing the output from 
+	the ete comparisons. It will also calculate the mean branch percent identity and record this in the same
+	output file.
+
+##########################
+
+License:
+
+This algorithm is free for all academic and non-profit research purposes. 
+
+We only ask that you please cite the following paper if you use this algorithm:
+Codon Aversion Motifs: An alignment-free method to recover phylogenies.
+
+For any for-profit usage, please contact Lauren McKinnon at laurenmckinnon77@gmail.com 
+
+##########################
+
+Thank you, and happy researching!!
+

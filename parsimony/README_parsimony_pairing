@@ -1,0 +1,105 @@
+##########################
+
+Create Species Matrix of Identical Codon Pairing, Co-tRNA Pairing, and Combined Pairing Relationships
+parsimony_pairing.py
+Created By: Lauren McKinnon
+Email: laurenmckinnon77@gmail.com
+
+##########################
+
+Purpose: Compare identical codon pairing,co-tRNA pairing, or combined pairing between species. Create a TNT formatted file of the
+matrix of species relationships.
+
+##########################
+
+ARGUMENT OPTIONS:
+
+	-h, --help           		Show this help message and exit
+	-id INPUT DIRECTORY    	 	Input path to a directory of Fasta files
+	-o  OUTPUT MATRIX FILE    	Output file name for the matrix
+	-oc OUTPUT CHARACTERS FILE  Output file name for the list of characters used in the matrix 
+	-on OUTPUT SPECIES NAME FILE Use a numbering system to represent species and output a key 
+	-t  NUMBER OF CORES			Specify the number of cores to use
+	-f  RIBOSOME FOOTPRINT		Specify the size of the ribosomal window used the calculate pairing
+	-c  CO-TRNA PAIRING			Do co-tRNA pairing instead of identical codon pairing
+	-comb COMBINED PAIRING		Do combined co-tRNA and identical codon pairing
+	-rna FLAG FOR RNA SEQUENCES Input Fasta files of RNA instead of DNA sequences
+
+##########################
+
+REQUIREMENTS:
+
+parsimony_pairingMatrix.py uses Python version 3.5
+
+Python libraries that must be installed include:
+1. sys
+2. os
+2. argparse
+3. re
+4. Process, current_process, freeze_support, and Pool from multiprocessing
+
+If any of those libraries is not currently in your Python Path, use the following command:
+pip3 install --user [library_name]
+to install the library to your path.
+
+##########################
+
+Input Directory:
+This algorithm requires as input either a single Fasta file of the coding sequences of a species
+	or a directory which contains multiple Fasta files.
+
+Output File:
+An output matrix file is required. Output character and output names files
+	are optional.
+
+##########################
+
+USAGE:
+
+Typical usage requires the -id option.
+The algorithm will use calculate the identical codon pairing, co-tRNA pairing, or combined pairing for each of the input files.
+	A codon is defined to be in pairing if it is located within the ribosomal
+	footprint window of an identical codon. The algorithm will compare the pairing between orthologs of different species. If a species contains a codon
+	that is found in pairing, it will be assigned a value of "1" in the matrix. If it is not found in pairing, it will be assigned a value
+	of "0". If the species does not have the codon for that given gene, it will be assigned a "?" in the matrix. This algorithm will
+	consider only codons that are parsimony informative. That is, they must be found in at least 4 species and they must be found with 
+	both a "0" and "1" in at least one species respectively. This algorithm also will include only species that are found to contain 
+	at least 5% of these informative codons.
+
+Example input directory:
+	See the example directory called mammals (located in the 'testFiles' directory).
+	
+By default, the algorithm computes the pairing matrix given a ribosomal window size of 9 codons.
+	This behavior may be modified using the "-f" option followed by the number of codons that 
+	the ribosome spans.
+
+By default, the algorithm computes the matrix using identical codon pairing. To perform the analysis using co-tRNA pairing, include
+	the "-c" option. To perform the analysis for combined pairing, include the "-comb" option.
+
+By default, the program accepts as input Fasta files of DNA coding sequences. To perform the analysis
+	using RNA, include the "-rna" option.
+
+By default, the program runs using all available cores. The "-t" option may be used to specify the
+	number of cores the program will use.
+
+Example usage:
+python parsimony_pairing.py -id testFiles/mammals -o mammals_matrix -f 4
+python parsimony_pairing.py -id testFiles/mammals -c -o mammals_cotrna_matrix.txt -oc mammals_chars.txt 
+python parsimony_pairing.py -id testFiles/mammals -comb -o mammals_cotrna_matrix.txt -on mammals_names.txt
+
+Running the first of the above commands will produce an output file for the species matrix based on identical codon pairing in a ribosomal window
+	of size 4.
+
+Running the second of the above commands will produce an output file for the species matrix based on co-tRNA codon pairing. It will also produce
+	an output file of the parsimonary informative characters that were used.
+
+Running the third of the above commands will produce an output file for the species matrix based on combined codon pairing. It will use a numbered system to name the species.
+	It will produce an output file for the key of file names to assigned species name.
+
+##########################
+
+
+Thank you, and happy researching!!
+
+
+

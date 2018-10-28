@@ -83,9 +83,9 @@ By default, the program runs using all available cores. The "-t" option may be u
 	number of cores the program will use.
 
 Example usage:
-python parsimony_pairing.py -id testFiles/mammals -o mammals_matrix -f 4
-python parsimony_pairing.py -id testFiles/mammals -c -o mammals_cotrna_matrix.txt -oc mammals_chars.txt 
-python parsimony_pairing.py -id testFiles/mammals -comb -o mammals_cotrna_matrix.txt -on mammals_names.txt
+python parsimony_pairing.py -id ../testfiles/mammals_small -o mammals_matrix -f 4
+python parsimony_pairing.py -id ../testfiles/mammals_small -c -o mammals_cotrna_matrix.txt -oc mammals_chars.txt 
+python parsimony_pairing.py -id ../testfiles/mammals_small -comb -o mammals_cotrna_matrix.txt -on mammals_names.txt
 
 Running the first of the above commands will produce an output file for the species matrix based on identical codon pairing in a ribosomal window
 	of size 4.

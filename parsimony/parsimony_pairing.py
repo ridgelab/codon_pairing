@@ -308,7 +308,7 @@ def readInputFiles(args):
 			outfileNames.write("Species_" + str(count) + "\t" + species + "\n")
 			count += 1
 		else:
-			speciesName = species.split("/")[1]
+			speciesName = species.split("/")[-1]
 			outfile.write(speciesName + "\t")
 		for item in informativeCodons:
 			fields = item.split('__')

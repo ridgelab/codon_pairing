@@ -2,8 +2,9 @@
 
 Retrieve Open Tree of Life Phylogenetic Reference Tree
 getOTLree.py
-Created By: Lauren McKinnon
+Created By: Lauren McKinnon and Justin Miller
 Email: laurenmckinnon77@gmail.com
+jmiller@byu.edu
 
 ##########################
 
@@ -22,13 +23,14 @@ ARGUMENT OPTIONS:
 
 REQUIREMENTS:
 
-getOTLtree.py uses Python version 2.7
+getOTLtree.py uses Python version 3.5
 
 Python libraries that must be installed include:
 1. sys
 2. argparse
 3. requests,json
 4. re
+5. ete3
 
 If any of those libraries is not currently in your Python Path, use the following command:
 pip install --user [library_name]
@@ -66,9 +68,9 @@ By default, a list of species that could not be included in the reference tree i
 	output file. To ignore this behavior, include the -e option.
 
 Example usage:
-python getOTLtree.py -i ../testFiles/OTL/test.nwk  -e -o outputName
-python getOTLtree.py -i ../testFiles/OTL/speciesNames.txt
-python getOTLtree.py -i ../testFiles/OTL/speciesNames.txt -e
+python getOTLtree.py -i ../testfiles/OTL/speciesNames.nwk  -e -o outputName
+python getOTLtree.py -i ../testfiles/OTL/speciesNames.txt
+python getOTLtree.py -i ../testfiles/OTL/speciesNames.txt -e
 
 
 Running the first of the above commands will produce an output file for each tree in the input file
@@ -83,6 +85,14 @@ Running the third of the above commands will write to standard out the reference
 
 ##########################
 
+This algorithm is free for all academic and non-profit research purposes. 
+
+We only ask that you please cite the following paper if you use this algorithm:
+Codon Aversion Motifs: An alignment-free method to recover phylogenies.
+
+For any for-profit usage, please contact Lauren McKinnon at laurenmckinnon77@gmail.com 
+
+##########################
 
 Thank you, and happy researching!!
 

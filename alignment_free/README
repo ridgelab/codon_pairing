@@ -18,15 +18,17 @@ ARGUMENT OPTIONS:
 	-id   INPUTDIR           Input Directory with Fasta Files
 	-o    OUTPUT             Output File
 	-t    THREADS            Number of Cores
-	-f    FOOTPRINT          Ribosome Footprint
-	-c    CO_TRNA            Number of Occurances
+	-f    FOOTPRINT          Ribosome Footprint window size
+	-c    CO_TRNA            Flag to use co-tRNA codon pairing
+	-b    BOTH            	 Flag to use both identical and co-tRNA codon pairing
+	-l    codon_table      	 Allows the user to specify an alternative codon table (BioPython). Default: Standard table
 	-rna  RNA                Flag for RNA sequences
 
 ##########################
 
 REQUIREMENTS:
 
-cam.py uses Python version 2.7
+cam.py uses Python version 3.5
 
 Python libraries that must be installed include:
 1. sys
@@ -35,8 +37,8 @@ Python libraries that must be installed include:
 4. re
 5. itertools
 6. os
-7. gzip (optional if using gzip files)
-8. Bio.Seq,Bio.Alphabet
+7. gzip (optional if using gzip files with .gz or .gzip file extensions)
+8. Bio.Seq,Bio.Alphabet (pip install --user biopython)
 
 If any of those libraries is not currently in your Python Path, use the following command:
 pip install --user [library_name]
@@ -66,15 +68,14 @@ By default, the ribosome footprint size is 9 codons
 
 
 Example usage:
-python pairing_distance.py -id ../testFiles/mammals/ -o output
-python pairing_distance.py -i ../testFiles/mammals/* > output
+python pairing_distance.py -id ../testfiles/mammals_small/ -o output
+python pairing_distance.py -i ../testfiles/mammals_small/* > output
 
 
 Running one of the above commands will produce a single output file called 'output' in the current directory.
 This command should take under a minute on a single core. If your machine allows multithreading, it should finish much faster.
 
 ##########################
-
 
 Thank you, and happy researching!!
 

@@ -28,7 +28,7 @@ Step 2:
 Create a Distance Matrix using pairing_distance.py (in 'alignment_free' directory)
 Examples of possible ways to do this are in the README (in 'alignment_free' directory). 
 The recommended method is:
-python alignment_free/pairing_distance.py -id testFiles/mammals/ -o output
+python alignment_free/pairing_distance.py -id testfiles/mammals_small/ -o output
 
 Step 3:
 Recover a phylogeny using the distance matrix.
@@ -62,13 +62,13 @@ See requirements in README_parsimony_pairing (in 'parsimony' directory) and READ
 Step 1:
 Move all coding sequences (CDS) in FASTA format into a directory, one for each species. 
 Each fasta file should be in the format {species_name}{.gz}, with the .gz being used if the file is gzipped.
-An example of a directory with correctly formatted CDS files is in the test/mammals/ directory.
+An example of a directory with correctly formatted CDS files is in the testfiles/mammals_small/ directory.
 
 Step 2:
 Create a character matrix of parsimony informative codons pairs using parsimony_pairing.py in 'parsimony' directory).
 Examples of possible ways to do this are in the README_parsimony_pairing file (in 'parsimony' directory).
 The recommended method is:
-python parsimony/parsimony_pairing -id testFiles/mammals/ -o mammals_matrix.txt -oc mammals_characters.txt
+python parsimony/parsimony_pairing -id testfiles/mammals_small/ -o mammals_matrix.txt -oc mammals_characters.txt
 
 Step 3:
 Recover a phylogeny using the character matrix created in Step 2.

@@ -38,15 +38,21 @@ def parseArgs():
 	parser.add_argument("-t",help="Number of Cores",action="store",dest="threads",default=0,type=int, required=False)
 	parser.add_argument("-i",help="Input Fasta Files",nargs='*',action="store", dest="input", required=False)
 	parser.add_argument("-id",help="Input Directory with Fasta Files",action="store", dest="inputDir", required=False)
-	parser.add_argument("-o",help="Output Directory",action="store",dest="output", required=False)
+	parser.add_argument("-o",help="Output File",action="store",dest="output", required=False)
 	parser.add_argument("-f",help="Ribosome Footprint",action="store",dest="footprint", type=int, default=9, required=False)
 	parser.add_argument("-c",help="Co-tRNA codon pairing",action="store_true",dest="co_trna", required=False)
+	parser.add_argument("-b",help="Both Identical and Co-tRNA codon pairing",action="store_true",dest="both", required=False)
 	parser.add_argument("-rna",help="Flag for RNA sequences",action="store_true",dest="rna", required=False)
+	parser.add_argument("-l",type=str, help="Codon Table. Default: Standard",action="store",dest="codon_table", default="Standard", required=False)
 	args = parser.parse_args()
 
 	if not args.input and not args.inputDir:
-		print "You must supply an input file with either -i or -id"
+		sys.stdout.write("You must supply an input file with either -i or -id\n")
 		sys.exit()
+	if args.co_trna and args.both:
+		sys.stdout.write("You cannot use both the co_trna (-c) and both (-b) flags.\n")
+		sys.exit()
+
 	return args
 
 
@@ -54,30 +60,53 @@ def getPairs(seq,orderedCodons):
 	footprint = args.footprint
 	pairs = dict()
 	codons = []
-	if args.co_trna:
+	dna_codons = []
+	if args.both or args.co_trna:
 		from Bio.Seq import Seq
 		from Bio.Alphabet import generic_dna
 		from Bio.Alphabet import generic_rna
 		if args.rna:
 			rna = Seq(seq,generic_rna)
-			aa = str(rna.translate())
+			aa = str(rna.translate(table=args.codon_table))
 			codons = re.findall(".",aa)
 		else:
-			seq = Seq(seq,generic_dna)
-			aa = str(seq.translate())
+			sequence = Seq(seq,generic_dna)
+			aa = str(sequence.translate(table=args.codon_table))
 			codons = re.findall(".",aa)
 	else:
 		codons = re.findall("...",seq)
-	lastFound = dict() #key= codon, value= position of last found codon with pairing
+	if args.co_trna: #To ensure that identical codon pairing does not form the amino acid
+		dna_codons = re.findall("...",seq)
+
+	lastFound = dict() #key= codon, value= position of last found codon with pairing #For co-trna: key = codon (amino acid), value= dict() where key=dna_codon (codon) and value = last position of it
 	foundPairing = set()
-	for x in xrange(len(codons)):
+	for x in range(len(codons)):
 		curCodon = codons[x]
 		if not curCodon in orderedCodons:
 			continue
-		if not curCodon in lastFound or (x - lastFound[curCodon] >= footprint):
-			lastFound[curCodon] =x
-			continue
+		if not args.co_trna:
+			if not curCodon in lastFound or (x - lastFound[curCodon] >= footprint): #Must be >= because if footprint is 2 and AAA is found at positions 3 and 4, 4-3 =1, which is 1 less than footprint size.
+				lastFound[curCodon] =x
+				continue
+		else:
+			if not curCodon in lastFound:  
+				lastFound[curCodon] = dict()
+				lastFound[curCodon][dna_codons[x]] =x
+				continue
+			closestPos = -100
+			for key,value in lastFound[curCodon].items():
+				if key == dna_codons[x]:
+					continue
+				if value >closestPos:
+					closestPos = value
+			if (x - closestPos) >= footprint:
+				lastFound[curCodon][dna_codons[x]] =x
+				continue
+
 		foundPairing.add(curCodon)
+		if args.co_trna:
+			lastFound[curCodon][dna_codons[x]] =x
+			continue
 		lastFound[curCodon] = x
 	return tuple(sorted(list(foundPairing)))
 
@@ -91,22 +120,26 @@ def readOneFile(inputFile):
 	header = ""
 	sequence = ""
 	codonPairs = set()
-	orderedCodons = makeAllPossibleCodons(args.rna, args.co_trna)
+	orderedCodons = makeAllPossibleCodons(args.rna, (args.co_trna | args.both))
+	gzipped = False
 	try:
-		if inputFile[-3:] =='.gz':
+		if inputFile.endswith('.gz') or inputFile.endswith(".gzip"):
+			gzipped =True
 			import gzip
 			input = gzip.open(inputFile,'r')
 		else:
 			input = open(inputFile,'r')
 		for line in input:
+			if gzipped:
+				line = line.decode()
 			if line[0] =='>':
-				if sequence !="":
+				if sequence !="" and (len(sequence)%3==0):
 					codonPairs.add(getPairs(sequence,orderedCodons))
 				header = line
 				sequence = ""
 				continue
 			sequence +=line.upper().strip()
-		if sequence != "":
+		if sequence != "" and (len(sequence)%3==0):
 			codonPairs.add(getPairs(sequence,orderedCodons))
 			sequence = ""
 	except Exception: #If the input file is malformatted, do not stop the program.
@@ -140,24 +173,28 @@ def readInputFiles(args):
 			path += '/'
 		allInputFiles = [path +i for i in allFasta]
 	if len(allInputFiles) < 1:
-		print "At least one input file is required"
+		sys.stdout.write("At least one input file is required\n")
 		sys.exit()
 	n = pool.map(readOneFile,allInputFiles)
-	output = sys.stdout
-	if args.output:
-		output = open(args.output,'w')
 	species = {}
 	for normalized in n:
 		if len(normalized) ==0:
 			continue
 		species[normalized[1]] =normalized[0]
-	output.write("," + ",".join(species.keys()) + "\n")
-	for s1,v1 in species.items():
+	if len(species) == 0:
+		sys.stderr.write("No distances were calculated\n")
+		sys.exit()
+	output = sys.stdout
+	if args.output:
+		output = open(args.output,'w')
+	sortedSpecies = sorted(species.keys())
+	output.write("," + ",".join(sortedSpecies) + "\n")
+	for s1 in sortedSpecies:
+		v1 =species[s1]
 		output.write(s1)
-		e = []
-		for s2,v2 in species.items():
+		for s2 in sortedSpecies:
+			v2=species[s2]
 			combined = v1 & v2
-			e.append(len(combined))
 			distance = 1-(float(len(combined)) / max(len(v1),len(v2)))
 			output.write("," + str(distance))
 		output.write("\n")
@@ -170,5 +207,22 @@ if __name__ =='__main__':
 	'''
 
 	args = parseArgs()
+	if args.codon_table:
+		try:
+			if args.both or args.co_trna:
+				from Bio.Seq import Seq
+				from Bio.Alphabet import generic_dna
+				from Bio.Alphabet import generic_rna
+				if args.rna:
+					rna = Seq("AUG",generic_rna)
+					aa = str(rna.translate(args.codon_table))
+				else:
+					sequence = Seq("ATG",generic_dna)
+					aa = str(sequence.translate(table=args.codon_table))
+		except Exception:
+			sys.stderr.write("Codon Table Does Not Exist.\n")
+			sys.exit()
+
+
 	readInputFiles(args)
 

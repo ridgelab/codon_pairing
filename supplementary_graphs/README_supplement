@@ -1,0 +1,52 @@
+##########################
+
+Tools for Supplementary Analyses 
+Created By: Lauren McKinnon
+Email: laurenmckinnon77@gmail.com
+
+##########################
+
+Purpose: Analyze the codon pairing motifs in all genes of a given clade. Create graphs to represent
+	this data.
+
+##########################
+
+REQUIREMENTS:
+
+These tools use Python version 3 and R.
+
+Python libraries that must be installed include:
+1. sys
+2. math
+
+If any of those libraries is not currently in your Python Path, use the following command:
+pip install --user [library_name]
+to install the library to your path.
+
+
+These tools also use R.
+
+R libraries that must be installed include:
+1. readr
+2. ggplot2
+3. grid
+4. gridExtra
+
+If any of those libraries are not installed, use the following commands in the R console:
+install.packages("readr")
+install.packages("ggplot2")
+install.packages("grid")
+install.packages("gridExtra")
+
+##########################
+
+INPUT:
+
+The input for these scripts (unless otherwise specified) is a file containing the codon pairing motifs (i.e. the set of codons that paired
+within a gene). The input file includes a species name followed by a codon pairing motif followed by the number of genes
+in the species that used that motif. For an example input, see the mammals file in this directory.
+
+##########################
+
+
+Thank you!!

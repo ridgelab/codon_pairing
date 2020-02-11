@@ -1,0 +1,9 @@
+,Balaenoptera_acutorostrata,Bos_indicus,Bos_mutus,Bubalus_bubalis,Ailuropoda_melanoleuca,Acinonyx_jubatus,Aotus_nancymaae,Bison_bison
+Balaenoptera_acutorostrata,0.0,0.998,0.996,0.996,0.998,0.998,0.998,0.998
+Bos_indicus,0.998,0.0,0.886,0.948,0.998,0.998,0.998,0.888
+Bos_mutus,0.996,0.886,0.0,0.954,0.998,0.998,0.996,0.884
+Bubalus_bubalis,0.996,0.948,0.954,0.0,0.998,0.998,0.998,0.938
+Ailuropoda_melanoleuca,0.998,0.998,0.998,0.998,0.0,0.995991983968,0.998,1.0
+Acinonyx_jubatus,0.998,0.998,0.998,0.998,0.995991983968,0.0,0.998,1.0
+Aotus_nancymaae,0.998,0.998,0.996,0.998,0.998,0.998,0.0,1.0
+Bison_bison,0.998,0.888,0.884,0.938,1.0,1.0,1.0,0.0

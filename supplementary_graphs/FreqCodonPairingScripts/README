@@ -1,0 +1,24 @@
+##########################
+
+CALCULATE FREQUENCY OF CODON PAIRING:
+
+The directory FreqCodonPairingScripts contains the tools to calculate the frequency that each codon is paired within all genes
+of a clade. These scripts will produce a graph showing a boxplot for each codon, where each boxplot represents the 
+distribution of the percent frequency of the codon pairing for each species.
+
+Step 1:
+Run makeCodonPairingInputFile.py with the path of the input file as the first argument and the path of the output file
+to be created as the second argument. The following command shows an example of how to use this program.
+
+python makeCodonPairingInputFile.py ../mammals mammals_codonFreq.txt
+
+Step 2:
+Create the graph using freqCodonPairing_rscript.R
+This program showed be run using 3 arguments:
+1 - The path to the input file
+2 - The path to the output file
+3 - The name of the clade (which will be used in the title)
+
+The following command shows how to run this script.
+
+Rscript freqCodonPairing_rscript.R mammals_codonFreq.txt mammals_codonFreq.png Mammals

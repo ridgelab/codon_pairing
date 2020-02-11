@@ -1,0 +1,74 @@
+##########################
+
+Pipeline for Analysis of Homology of Identical Codon Pairing, Co-tRNA Pairing, and Combined Pairing Relationships
+Created By: Lauren McKinnon
+Email: laurenmckinnon77@gmail.com
+
+##########################
+
+Purpose: Calculate retention index of identical codon pairing,co-tRNA pairing, or combined pairing. Compare to random permutations.
+
+##########################
+
+
+REQUIREMENTS:
+
+These scripts use Python version 3.5 and R.
+
+Python libraries that must be installed include:
+1. sys
+2. os
+3. numpy
+4. random
+
+If any of those libraries is not currently in your Python Path, use the following command:
+pip3 install --user [library_name]
+to install the library to your path.
+
+R libraries that must be installed include:
+1. readr
+2. ggplot2
+
+If any of these libraries is not install, use the following commands in the R console:
+install.packages("readr")
+install.packages("ggplot2")
+
+##########################
+PIPELINE - example
+
+Step 1: Prepare state change files
+Use the output matrix and character files from the parsimony_pairing directory in getHomology.py.
+python3 getHomology.py test_files/mammals_cotrna_matrix.txt test_files/mammals_cotrna_chars.txt mammals_cotrna_homology
+
+
+Step 2: Score the state change against the Open Tree of Life.
+This script was adapted from Miller et. al (https://doi.org/10.1016/j.ympev.2019.106697) and is included here for convenience.
+python3 codon_congruence/scoreCharactersOnTree.py -c test_files/mammals_cotrna_homology -r test_files/mammal_ref.nwk -o mammal_state_change
+
+
+Step 3: Calculate the retention index
+python3 calcActualRI.py test_files/mammal_state_change mammal_RI mammals_RIs.csv
+
+
+#Compare these results to random permutations
+Step 4: Create random permutations of the Open Tree of Life
+python3 makeRandom.py test_files/mammals_ref.nwk mammal_perms.nwk
+
+
+Step 5: Score the state change against random permutations
+mkdir mammal_perms
+python3 codon_congruence/scoreCharactersOnTree.py -c test_files/mammals_cotrna_homology -r test_files/mammal_perms.nwk -o mammal_perms
+
+
+Step 6: Calculate retention indices for each state change file
+python3 calcRetentionIndex.py mammal_perms mammal_summary.csv
+
+
+Step 7: Make the figure
+Rscript permutations_RI.R test_files/mammal_summary.csv mammal.pdf "Mammal"
+
+
+##########################
+
+
+Thank you, and happy researching!!

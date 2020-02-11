@@ -59,7 +59,7 @@ pairing_filtered = remove_outliers(pairingFile)
 bigFile = rbind(co_filtered,pairing_filtered,comb_filtered)
 
 # Subset to a reasonable size
-rand.rows <- sample(nrow(bigFile),5000)
+rand.rows <- sample(nrow(bigFile),min(nrow(bigFile),5000))
 smallFile <- bigFile[rand.rows,]
 
 # Make the nice plot

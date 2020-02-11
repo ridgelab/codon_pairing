@@ -1,137 +1,36 @@
 ##########################
 
-Tools to Create Supplementary Graphs
-Created By: Lauren McKinnon
-Email: laurenmckinnon77@gmail.com
-
-##########################
-
-Purpose: Analyze the codon pairing motifs in all genes of a given clade. Create graphs to represent
-	this data.
-
-##########################
-
-REQUIREMENTS:
-
-These tools use Python version 2.7
-
-Python libraries that must be installed include:
-1. sys
-2. math
-
-If any of those libraries is not currently in your Python Path, use the following command:
-pip install --user [library_name]
-to install the library to your path.
-
-
-These tools also use R Studio.
-
-##########################
-
 INPUT:
 
-The input for each of these scripts is a file containing the codon pairing motifs (i.e. the set of codons that paired
-within a gene). The input file includes a species name followed by a codon pairing motif followed by the number of genes
-in the species that used that motif. For an example input, see the mammals file in this directory.
+The input for this script is a directory of pairing files made using the program in the parsimony_pairing directory.
+For example input see ../test_mammals.
 
 ##########################
 
-CALCULATE FREQUENCY OF CODON PAIRING:
+CALCULATE THE NUMBER OF CODON PAIRS COMPARED TO THE LENGTH OF THE GENE 
 
-The directory FreqCodonPairingScripts contains the tools to calculate the frequency that each codon is paired within all genes
-of a clade. These scripts will produce a graph showing a boxplot for each codon, where each boxplot represents the 
-distribution of the percent frequency of the codon pairing for each species.
+These scripts will produce a scatterplot with a linear regression showing the number of codon pairs compared to the length of the gene.
+
 
 Step 1:
-Run makeCodonPairingInputFile.py with the path of the input file as the first argument and the path of the output file
+Run makePairsToLength.py with the path of the input file as the first argument and the path of the output file
 to be created as the second argument. The following command shows an example of how to use this program.
 
-python makeCodonPairingInputFile.py ../mammals mammals_codonFreq.txt
+
+python makePairsToLength.py ../test_mammals/dna/ CSVs/mammals_dna.csv
+python makePairsToLength.py ../test_mammals/cotrna/ CSVs/mammals_cotrna.csv
+python makePairsToLength.py ../test_mammals/combined/ CSVs/mammals_combined.csv
+
 
 Step 2:
-Create the graph using freqCodonPairing_rscript.R
+Create the graph using pairingLengthGraph.R
 This program showed be run using 3 arguments:
-1 - The path to the input file
-2 - The path to the output file
-3 - The name of the clade (which will be used in the title)
+1 - The path to the input Co-tRNA file
+2 - The path to the input DNA file
+3 - The path to the input Combined file
+4 - The name of the clade (which will be used in the title)
+5 - Output file name
 
 The following command shows how to run this script.
-
-Rscript freqCodonPairing_rscript.R mammals_codonFreq.txt mammals_codonFreq.png Mammals
-
+Rscript pairingLengthGraph.R CSVs/mammals_cotrna.csv CSVs/mammals_dna.csv CSVs/mammals_combined.csv Mammals mammals.pdf
 ########################
-
-CALCULATE THE NUMBER OF CODON PAIRS IN MOTIFS
-
-The directory NumCodonsInMotifs contains the tools to calculate the number of codons that each motifs contains. The scripts will
-create a graph showing the the number of codons in a motif on the x-axis related to the number of different motifs that use that
-number of codons on the y-axis.
-
-Step 1:
-
-Run makeNumCodonsInputFile.py with the path of the input file as the first argument and the path of the output file
-to be created as the second argument. The following command shows an example of how to use this program.
-
-python makeNumCodonsInputFile.py ../mammals mammals_numCodons.txt
-
-Step 2:
-Create the graph using numCodonPairs_rscript.R
-This program showed be run using 3 arguments:
-1 - The path to the input file
-2 - The path to the output file
-3 - The name of the clade (which will be used in the title)
-
-The following command shows how to run this script.
-
-Rscript numCodonPairs_rscript.R mammals_numCodons.txt mammals_numCodons.png Mammals
-
-########################
-
-CALCULATE THE FREQUENCY OF REPEATED MOTIFS
-
-The directory FreqRepeatedMotifsScripts contains the tools to calculate the number of times a motifs is repeated. The scripts produce
-a graph that shows on the x-axis the number of times a motif is repeated, and the y-axis shows the number of motifs.
-
-Step 1:
-
-Run makeRepeatedMotifsFile.py with the path of the input file as the first argument and the path of the output file
-to be created as the second argument. The following command shows an example of how to use this program.
-
-python makeRepeatedMotifsFile.py ../mammals mammals_repeatedMotifs.txt
-
-Step 2:
-Create the graph using repeatedMotifs_rscript.R
-This program showed be run using 3 arguments:
-1 - The path to the input file
-2 - The path to the output file
-3 - The name of the clade (which will be used in the title)
-
-The following command shows how to run this script.
-
-Rscript repeatedMotifs_rscript.R mammals_repeatedMotifs.txt mammals_repeatedMotifs.png Mammals
-
-########################
-
-CALCULATE UNIQUE VS. REPEATED MOTIFS
-
-The directory UniqueMotifsScripts contains the tools to calculate the number of unique motifs vs. the number of motifs that are
-used in multiple species. The diretory contains a program that outputs a file containing the number of unique motifs and the number
-of repeated motifs. These statistics can then be used in Excel or another graph-making software to visually represent the unique
-and repeated motifs.
-
-Step 1:
-
-Run makeUniqueMotifsFile.py with the path of the input file as the first argument and the path of the output file
-to be created as the second argument. The following command shows an example of how to use this program.
-
-python makeUniqueMotifsFile.py ../mammals mammals_uniqueMotifs.txt
-
-Step 2:
-
-Create a bar graph representing this data in Excel or another graph-making software.
-
-
-##########################
-
-
-Thank you!!

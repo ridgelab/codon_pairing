@@ -8,7 +8,6 @@ library(readr)
 library(gridExtra)
 library(grid)
 
-setwd("/fslhome/lmckinno/fsl_groups/fslg_RidgeLab/compute/forLauren/pairing/RB9/Length_Pairs_CSVs")
 
 remove_outliers <- function(myFile){
   #Identify and remove outliers for Gene Length
